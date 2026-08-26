@@ -1,5 +1,6 @@
 import json
 import os
+import random
 from dotenv import load_dotenv
 from google import genai
 from google.genai import types
@@ -52,9 +53,12 @@ if __name__ == "__main__":
         with open(questions_file, "r", encoding="utf-8") as f:
             questions = [json.loads(line) for line in f]
             
-        print(f"Testing generator on {min(3, len(questions))} real code questions...\n")
+        sample_size = min(3, len(questions))
+        selected_questions = random.sample(questions, sample_size)
+
+        print(f"Testing generator on {sample_size} random code questions...\n")
         
-        for q in questions[:3]:
+        for q in selected_questions:
             gold_passages = [all_passages[pid] for pid in q["gold_passage_ids"] if pid in all_passages]
             answer = generate_answer(q["question"], gold_passages)
             print(f"Q: {q['question']}")
